@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+    kompose.version: 1.28.0 (c4137012e)
+  labels:
+    io.kompose.service: redis
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: redis
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+        kompose.version: 1.28.0 (c4137012e)
+      labels:
+        io.kompose.network/ckan-default: "true"
+        io.kompose.service: redis
+    spec:
+      containers:
+        - image: redis:6
+          livenessProbe:
+            exec:
+              command:
+                - redis-cli
+                - -e
+                - QUIT
+          name: redis
+          resources: {}
+      restartPolicy: Always
+status: {}
