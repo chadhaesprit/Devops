@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:13.2
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: postgre
+      POSTGRES_USER: postgreadmin
+      POSTGRES_PASSWORD: postgreadmin
+    networks:
+      - local-keycloak
+
+  keycloak:
+    depends_on:
+      - postgres
+    container_name: local_keycloak
+    #dockerfile: Dockerfile
+    #command: /bin/sh -c "keycloak_install.sh"
+    environment:
+       DB_VENDOR: postgres
+       DB_ADDR: postgres
+       DB_DATABASE: postgre
+       DB_USER: postgreadmin
+       DB_PASSWORD: postgreadmin
+    image: jboss/keycloak:latest
+    ports:
+       - "28080:8080"
+    restart: unless-stopped
+    networks:
+      - local-keycloak
+
+networks:
+  local-keycloak:
